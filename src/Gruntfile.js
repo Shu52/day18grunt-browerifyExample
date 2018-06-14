@@ -9,7 +9,7 @@ module.exports = function(grunt) {
             "./styles/**/*.css",
             "!node_modules/**/*.js"
           ],
-          tasks: ["eslint","browserify","copy"], //running these tasks
+          tasks: ["eslint","browserify","copy","uglify"], //running these tasks
           options: {
             spawn: false
           }
@@ -45,6 +45,23 @@ module.exports = function(grunt) {
           ]
         }
       },
+      uglify: {
+        options: {
+          banner:
+            "/*! <%= pkg.name %> <%= grunt.template.today('yyyy-mm-dd') %> */"
+        },
+        build: {
+          files: [
+            {
+              expand: true,
+              cwd: "../dist",
+              src: "bundle.js",
+              dest: "../dist",
+              ext: ".min.js"
+            }
+          ]
+        }
+      },
       eslint:{  //run eslint files to watch and files not to watch !
           src:["./scripts/**/*.js","!node_modules/**/*.js"]
       }
@@ -53,5 +70,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-browserify");
-    grunt.registerTask("default", ["eslint","browserify","copy", "watch"]); //same thing is true for registertasks
+    grunt.loadNpmTasks("grunt-contrib-uglify-es");
+    grunt.registerTask("default", ["eslint","browserify","copy","uglify", "watch"]); //same thing is true for registertasks
   };
